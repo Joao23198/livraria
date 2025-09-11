@@ -19,63 +19,67 @@ class Command(BaseCommand):
         df_editoras.columns = [c.strip().lower().lstrip("\ufeff") for c in df_editoras.columns]
         df_autores.columns = [c.strip().lower().lstrip("\ufeff") for c in df_autores.columns]
         df_livros.columns = [c.strip().lower().lstrip("\ufeff") for c in df_livros.columns]
-        # normaliza os nomes das colunas: tira espaços extras, deixa em minúsculo e remove o ufeff
-        # o \ufeff é um caractere especial invisível
+        
+        
+        ###### Livros e Autores #####
+        
+        # 1) Unir nome e sobrenome do autor
+        df_autores['nome_completo'] = df_autores['autor']+' '+df_autores['s_autor']
+        # print(df_autores)
+        
+        # 2) Criar coluna "id" em Autores
+        df_autores['id'] = df_autores.index + 1
+        # print(df_autores)
+        
+        # 3) Criar dicionário de mapeamento
+        mapa_autores = dict(zip(df_autores['nome_completo'], df_autores["id"]))
+        # print(mapa_autores)
+        
+        # 4) Buscar autor de livros no dicionário e retornar "id"
+        df_livros['id_autor'] = df_livros['autor'].map(mapa_autores)
+        #df_livros.to_excel("livors.xlsx", index=False)
+        
+        
+        ###### Livros e Editoras #####
+        # 1) Criar coluna "id"
+        df_editoras['id'] = df_editoras.index + 1
+        
+        # 2) Criar dicionário de mapeamento
+        mapa_editoras = dict(zip(df_editoras['editora'], df_editoras['id']))
+        # print(mapa_editoras)
+        
+        # 3) Criar o "id_editora" em livros
+        df_livros['id_editora'] = df_livros["editora"].map(mapa_editoras)
+
+        #df_livros.to_excel("livors.xlsx", index=False)
+        
+        
+        if o["truncate"]: Livro.objects.all().delete()
         
 
-        df_autores ["nome_completo"] = df_autores["autor"] + "" + df_autores["s_autor"]
-        # print(df_autores)
-
-        df_autores ["id"] = df_autores.index + 1
-        # print(df_autores)
-
-        mapa_autores = dict(zip(df_autores["nome_completo"], df_autores["id"]))
-        # print(mapa_autores)
-
-        df_livros["id_autor"] = df_livros["autor"].map(mapa_autores)
-
-        #######
-        df_editoras["id"] = df_editoras.index+1
-
-        mapa_editoras = dict(zip(df_editoras["editora"], df_editoras["id"]))
-        # print(mapa_editoras)
-
-        df_livros["id_editoras"] = df_livros["editora"].map(mapa_editoras)
-        print()
-
-        if o["truncate"]: Livro.objects.all().delete()
-
-        df_livros["titulo"] = df_livros["titulo"].astype(str).str.strip
-        df_livros["subtitulo"] = df_livros["subtitulo"].astype(str).str.strip
-
-        df_livros["autor"] = df_livros["id_autor"].astype(str).str.strip
-        df_livros["editora"] = df_livros["id_editoras"].astype(int)
-
-        df_livros["isbn"] = df_livros["isbn"].astype(str).str.strip
-        df_livros["descricao"] = df_livros["descricao"].astype(str).str.strip
-        df_livros["idioma"] = df_livros["idioma"].astype(str).str.strip
-        df_livros["ano"] = df_livros["ano"].astype(str)
-        df_livros["paginas"] = df_livros["paginas"].astype(str).str.strip
-        df_livros["preco"] = df_livros["preco"].astype(float)
-        df_livros["estoque"] = df_livros["estoque"].astype(int)
-        df_livros["desconto"] = df_livros["desconto"].astype(float)
-        df_livros["disponivel"] = df_livros["disponivel"].astype(bool)
-        df_livros["dimensoes"] = df_livros["dimensoes"].astype(str).str.strip
-        df_livros["peso"] = df_livros["peso"].astype(float)
-        df_livros[""] = df_livros[""].astype(str).str.strip
-        df_livros[""] = df_livros[""].astype(str).str.strip
-        df_livros[""] = df_livros[""].astype(str).str.strip
-        df_livros[""] = df_livros[""].astype(str).str.strip
-        df_livros[""] = df_livros[""].astype(str).str.strip
-        df_livros[""] = df_livros[""].astype(str).str.strip
-        df_livros[""] = df_livros[""].astype(str).str.strip
-        df_livros[""] = df_livros[""].astype(str).str.strip
+        df_livros['titulo']=df_livros["titulo"].astype(str).str.strip()
+        df_livros['subtitulo']=df_livros["subtitulo"].astype(str).str.strip()
+        
+        df_livros['autor']=df_livros["id_autor"].astype(int)
+        df_livros['editora']=df_livros["id_editora"].astype(int)
+        
+        df_livros['isbn']=df_livros["isbn"].astype(str).str.strip()
+        df_livros['descricao']=df_livros["descricao"].astype(str).str.strip()
+        df_livros['idioma']=df_livros["idioma"].astype(str).str.strip()
+        df_livros['ano']=df_livros["ano"].astype(str)
+        df_livros['paginas']=df_livros["paginas"].astype(int)
+        df_livros['preco']=df_livros["preco"].astype(float)
+        df_livros['estoque']=df_livros["estoque"].astype(int)
+        df_livros['desconto']=df_livros["desconto"].astype(float)
+        df_livros['disponivel']=df_livros["disponivel"].astype(bool)
+        df_livros['dimensoes']=df_livros["dimensoes"].astype(str).str.strip()
+        df_livros['peso']=df_livros["peso"].astype(float)
 
         if o["update"]:
             criados = atualizados = 0
             for r in df_livros.itertuples(index=False):
                 _, created = Livro.objects.update_or_create(
-                    isbn = r.isbn,
+                    isbn=r.isbn,
                     defaults={
                         "titulo": r.titulo,
                         "subtitulo": r.subtitulo or "",
@@ -83,7 +87,7 @@ class Command(BaseCommand):
                         "editora_id": int(r.id_editora),
                         "descricao": r.descricao or "",
                         "idioma": r.idioma or "",
-                        "ano_publicacao": int(r.ano_publicacao) if pd.notna(r.ano_publicacao) else None,
+                        "ano": int(r.ano) if pd.notna(r.ano) else None,
                         "paginas": int(r.paginas),
                         "preco": float(r.preco),
                         "estoque": int(r.estoque),
@@ -93,13 +97,14 @@ class Command(BaseCommand):
                         "peso": float(r.peso),
                     },
                 )
-                
-                criados += int(created)
-                atualizados += int(not created)
-            self.stdout.write(self.style.SUCCESS(f'Criados: {criados} | Atualizados: {atualizados}'))
+
+            criados += int(created)           # conta os novos
+            atualizados += int(not created)   # conta os atualizados
+            self.stdout.write(self.style.SUCCESS(f"Criados: {criados} | Atualizados: {atualizados}"))
+ 
         else:
-              objs = []
-        for r in df_livros.itertuples(index=False):
+            objs = []
+            for r in df_livros.itertuples(index=False):
                 objs.append(
                     Livro(
                         isbn=r.isbn,
@@ -109,7 +114,7 @@ class Command(BaseCommand):
                         editora_id=int(r.id_editora),
                         descricao=r.descricao or "",
                         idioma=r.idioma or "",
-                        ano_publicacao=int(r.ano_publicacao) if pd.notna(r.ano_publicacao) else None,
+                        ano=int(r.ano) if pd.notna(r.ano) else None,
                         paginas=int(r.paginas),
                         preco=float(r.preco),
                         estoque=int(r.estoque),
@@ -119,5 +124,8 @@ class Command(BaseCommand):
                         peso=float(r.peso),
                     )
                 )
-                Livro.objects.bulk_create(objs, ignore_conflicts=True)
-                criados = len(objs)
+            Livro.objects.bulk_create(objs, ignore_conflicts=True)
+            criados = len(objs)
+ 
+ 
+            self.stdout.write(self.style.SUCCESS(f"Criados: {len(objs)}"))
