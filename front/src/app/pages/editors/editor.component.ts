@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AutoresService } from '../../services/autores.service';
-import { Autor } from '../../models/autor';
-import { AuthService } from '../../services/auth.services';
+import { Editor } from '../../models/editor';
+import {EditresService}
+import {EditorsService }
 
 @Component({
   standalone: true,
@@ -19,10 +19,10 @@ import { AuthService } from '../../services/auth.services';
         <ul style="padding-left:1.25rem">
           @for (a of autores(); track a.id) {
             <li style="margin:.25rem 0">
-              <strong>{{ a.nome }} {{ a.sobrenome }}</strong>
-              @if (a.nacionalidade) { — <em style="color:#666">{{ a.nacionalidade }}</em> }
-              @if (a.data_nascimento) { • {{ a.data_nascimento }} }
-              @if (a.biografia) { <div style="color:#555">{{ a.biografia }}</div> }
+              <strong>{{ a.autor }} {{ a.s_autor }}</strong>
+              @if (a.nacio) { — <em style="color:#666">{{ a.nacio }}</em> }
+              @if (a.nasc) { • {{ a.nasc }} }
+              @if (a.biogr) { <div style="color:#555">{{ a.biogr }}</div> }
             </li>
           }
         </ul>
