@@ -1,4 +1,4 @@
-export interface Editor {
+export interface  Editora {
   cnpj: number;
   endereco: string;
   telefone: number;
