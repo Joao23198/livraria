@@ -1,16 +1,16 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Editora } from '../models/editor';
+import { Livro } from '../models/livro';
 import { environment } from '../../environments/environments';
 
 @Injectable({ providedIn: 'root' })
-export class EditorasService {
+export class LivrosService {
   private http = inject(HttpClient);
   private base = environment.apiBase;
   
-  listar(): Observable<Editora[]> {
-    const url = `${this.base}api/editoras`;
-    return this.http.get<Editora[]>(url);
+  listar(): Observable<Livro[]> {
+    const url = `${this.base}api/livros`;
+    return this.http.get<Livro[]>(url);
   }
 }

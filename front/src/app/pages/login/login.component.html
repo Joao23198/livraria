@@ -1,0 +1,27 @@
+	<section>
+    <h1 >Entrar</h1>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div >
+        <label>
+          Usuário
+          <input formControlName="username" autocomplete="username" />
+        </label>
+
+        <label>
+          Senha
+          <input type="password" formControlName="password" autocomplete="current-password" />
+        </label>
+
+        <button type="submit" [disabled]="form.invalid || loading()">Entrar</button>
+      </div>
+    </form>
+
+    @if (error()) {
+      <p >{{ error() }}</p>
+    }
+
+    <p >
+      <a routerLink="/">Voltar</a>
+    </p>
+  </section>

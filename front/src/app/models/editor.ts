@@ -1,7 +1,9 @@
-export interface  Editora {
-  cnpj: number;
-  endereco: string;
-  telefone: number;
-  email?: string | null;
-  site?: string | null;
+export interface Editora{
+    id: number;
+    editora: string;
+    cnpj?: string | null;
+    endereco?: string | null;
+    telefone?: string | null;
+    email?: string | null;
+    site?: string | null;
 }
