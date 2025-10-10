@@ -1,17 +1,17 @@
 from django.shortcuts import render
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
-from .models import Autor, Editora, Livro
-from .serializers import AutorSerializer, EditoraSerializer, LivroSerializer, RegisterSerializer
+from .models import Autor, Editora, Livro, Imagem
+from .serializers import AutorSerializer, EditoraSerializer, LivroSerializer, RegisterSerializer,ImagemSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.viewsets import ModelViewSet
 
 from rest_framework_simplejwt.tokens import RefreshToken
-
 # Filters
 from .filters import AutorFilter 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -89,5 +89,11 @@ class RegisterView(ListCreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
+
+
+class ImageViewSet(ModelViewSet):
+    queryset = Imagem.objects.all().order_by("criado_em")
+    serializer_class = ImagemSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
