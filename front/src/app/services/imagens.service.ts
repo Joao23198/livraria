@@ -19,10 +19,18 @@ export class ImagemService{
         const token = localStorage.getItem('access')
         return token ? new HttpHeaders({Authorization: `Bearer ${token}`}) : new HttpHeaders()
     }
+
     listar(): Observable<Imagem[]>{
         return this.http.get<Imagem[]>(this.base, {headers: this.headers()})
+    }
+    
+    enviar(file: File): Observable<Imagem>{
+        const form =new FormData()
+        form.append('imagem', file)
+        return this.http.post<Imagem>(this.base, form, {headers: this.headers()})
+    }
 
-
-
+    deletar(id: number){
+        return this.http.delete(`${this.base}${id}/`, {headers: this.headers()})
     }
 }
