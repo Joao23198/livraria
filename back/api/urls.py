@@ -8,6 +8,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r"imagens", ImageViewSet,basename="imagens")
+router.register(r"livros", LivrosView, basename="livros")
 
 
 urlpatterns = [
@@ -16,12 +17,12 @@ urlpatterns = [
 ####### GET E POST #######
     path('autores', AutoresView.as_view()),
     path('editoras', EditorasView.as_view()),
-    path('livros', LivrosView.as_view()),
+    # path('livros', LivrosView.as_view()),
 #################################################
 ####### UPDATE E DELETE #######
 path('autor/<int:pk>', AutoresDetailView.as_view()),
 path('editora/<int:pk>', EditorasDetailView.as_view()),
-path('livro/<int:pk>', LivrosDetailView.as_view()),
+# path('livro/<int:pk>', LivrosDetailView.as_view()),
 #################################################
 
 ### TOKEN ###
@@ -30,7 +31,6 @@ path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 path('register/', RegisterView.as_view(), name='register'),
 ]
-
 
 urlpatterns += router.urls
 
